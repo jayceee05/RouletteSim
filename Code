@@ -1,0 +1,69 @@
+import java.util.PriorityQueue; 
+import java.util.Hashtable;      
+import java.util.Random;         
+
+public class Main {
+
+    // Tabla para almacenar los números premiados con su correspondiente premio
+    static Hashtable numerosPremiados = new Hashtable();
+
+    // Cola de prioridad que contendrá los números generados aleatoriamente
+    static PriorityQueue colaPrioridad = new PriorityQueue();
+
+    // Clase para generar números aleatorios
+    static Random random = new Random();
+
+    // Método que genera un número aleatorio entre 1 y 50 y verifica que no se repita
+    static int numRandomNuevo(int num) {
+        // Si el número no está en la cola de prioridad (no es repetido)
+        if (!colaPrioridad.contains(num)) {
+            return num;  // Retorna el número si es único
+        } else {
+            // Si el número ya está en la cola, genera uno nuevo y vuelve a verificar
+            return numRandomNuevo(random.nextInt(49) + 1);
+        }
+    }
+
+    public static void main(String[] args) {
+        // Arreglo de 30 premios diferentes
+        String[] premios = new String[30];
+
+        // Definición de los primeros 10 premios (consolas de videojuegos)
+        premios[0] = "PS5";
+        premios[1] = "Switch";
+        premios[2] = "Switch2";
+        premios[3] = "XBOXS";
+        premios[4] = "Wii";
+        premios[5] = "DS";
+        premios[6] = "N64";
+        premios[7] = "NES";
+        premios[8] = "XBOX";
+        premios[9] = "Atari";
+
+        // Generación de 30 números aleatorios y asignación de premios a los primeros 10
+        for (int i = 0; i < 30; i++) {
+            // Genera un número aleatorio único entre 1 y 50
+            int num = numRandomNuevo(random.nextInt(49) + 1);
+
+            // Añade el número a la cola de prioridad (números ordenados)
+            colaPrioridad.add(num);
+
+            // Si el número es uno de los primeros 10, asigna un premio
+            if (i < 10) {
+                numerosPremiados.put(num, premios[i]);  // Asocia el número con un premio
+            }
+        }
+
+        // Imprime los resultados de los sorteos
+        while (!colaPrioridad.isEmpty()) {
+            // Si el número en la parte superior de la cola tiene un premio asignado
+            if (numerosPremiados.containsKey(colaPrioridad.peek())) {
+                // Imprime el número y su premio
+                System.out.println("Numero " + colaPrioridad.peek() + " gano " + numerosPremiados.get(colaPrioridad.poll()));
+            } else {
+                // Si el número no tiene un premio asignado, gana $50
+                System.out.println("Numero " + colaPrioridad.poll() + " gano $50 mxn");
+            }
+        }
+    }
+}
